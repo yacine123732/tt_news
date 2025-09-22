@@ -50,7 +50,6 @@ use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Resource\FileRepository;
 use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
 use TYPO3\CMS\Core\TimeTracker\TimeTracker;
-use TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -60,7 +59,6 @@ use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-use TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
 
 /**
  * Plugin 'news' for the 'tt_news' extension.
@@ -333,8 +331,17 @@ class TtNews extends AbstractPlugin
     public function __construct()
     {
         //if search => disable cache hash check to avoid pageNotFoundOnCHashError, see \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::reqCHash
-        if (GeneralUtility::_GPmerged($this->prefixId)['swords'] ?? false) {
-            $this->pi_checkCHash = false;
+        $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        if ($request instanceof \Psr\Http\Message\ServerRequestInterface) {
+            $queryParams = $request->getQueryParams();
+            $parsedBody = $request->getParsedBody();
+            $prefixedQuery = is_array($queryParams[$this->prefixId] ?? null) ? $queryParams[$this->prefixId] : [];
+            $prefixedBody = is_array($parsedBody[$this->prefixId] ?? null) ? $parsedBody[$this->prefixId] : [];
+            $merged = $prefixedQuery;
+            ArrayUtility::mergeRecursiveWithOverrule($merged, $prefixedBody);
+            if (!empty($merged['swords'])) {
+                $this->pi_checkCHash = false;
+            }
         }
 
         $this->markerBasedTemplateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
