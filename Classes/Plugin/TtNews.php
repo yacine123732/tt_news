@@ -2813,7 +2813,6 @@ class TtNews extends AbstractPlugin
                 );
             } else {
                 $imageMode = $textRenderObj == 'displayLatest' ? $lConf['latestImageMode'] : $lConf['listImageMode'] ?? false;
-
                 $suf = '';
                 if (!empty($lConf['image.']['file.']['maxW']) && is_numeric(substr((string)$lConf['image.']['file.']['maxW'], -1)) && $imageMode) {
                     // 'm' or 'c' not set by TS
@@ -2851,7 +2850,8 @@ class TtNews extends AbstractPlugin
                     if ($val) {
                         $lConf['image.']['altText'] = $imgsAltTexts[$cc];
                         $lConf['image.']['titleText'] = $imgsTitleTexts[$cc];
-                        $lConf['image.']['file'] = $imgPath . $val;
+//                        $lConf['image.']['file'] = $imgPath . $val;
+                        $lConf['image.']['file'] = $this->images[$cc];
 
                         $theImgCode .= $this->local_cObj->cObjGetSingle(
                             'IMAGE',
@@ -2906,6 +2906,7 @@ class TtNews extends AbstractPlugin
             array_shift($imgsCaptions);
             array_shift($imgsAltTexts);
             array_shift($imgsTitleTexts);
+            array_shift($this->images);
             $iC--;
         }
 
@@ -2952,7 +2953,8 @@ class TtNews extends AbstractPlugin
 
                 $lConf['image.']['altText'] = $imgsAltTexts[$cc];
                 $lConf['image.']['titleText'] = $imgsTitleTexts[$cc];
-                $lConf['image.']['file'] = $imgPath . $val;
+//                $lConf['image.']['file'] = $imgPath . $val;
+                $lConf['image.']['file'] = $this->images[$cc];
 
                 $imgHtml = $this->local_cObj->cObjGetSingle(
                     'IMAGE',
