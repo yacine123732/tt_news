@@ -10,11 +10,11 @@ $fTableWhere = (($confArr['useStoragePid'] ?? false) ? 'AND tt_news_cat.pid=###S
 // page where records will be stored in that have been created with a wizard
 $sPid = ($fTableWhere ? '###STORAGE_PID###' : '###CURRENT_PID###');
 // l10n_mode for text fields
-$l10n_mode = ($confArr['l10n_mode_prefixLangTitle'] ? 'prefixLangTitle' : '');
+$l10n_mode = (($confArr['l10n_mode_prefixLangTitle'] ?? '') ? 'prefixLangTitle' : '');
 // l10n_mode for the image field
-$l10n_mode_image = ($confArr['l10n_mode_imageExclude'] ? 'exclude' : 'mergeIfNotBlank');
+$l10n_mode_image = (($confArr['l10n_mode_imageExclude'] ?? '') ? 'exclude' : 'mergeIfNotBlank');
 // hide new localizations
-$hideNewLocalizations = ($confArr['hideNewLocalizations'] ? 'mergeIfNotBlank' : '');
+$hideNewLocalizations = (($confArr['hideNewLocalizations'] ?? '') ? 'mergeIfNotBlank' : '');
 $locallang_general = 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:';
 
 // ******************************************************************
@@ -23,11 +23,11 @@ $locallang_general = 'LLL:EXT:core/Resources/Private/Language/locallang_general.
 return [
     'ctrl' => [
         'title' => 'LLL:EXT:tt_news/Resources/Private/Language/locallang_tca.xlf:tt_news',
-        'label' => $confArr['label'] ?: 'title',
-        'label_alt' => $confArr['label_alt'] . ($confArr['label_alt2'] ? ',' . $confArr['label_alt2'] : ''),
-        'label_alt_force' => $confArr['label_alt_force'],
+        'label' => ($confArr['label'] ?? '') ?: 'title',
+        'label_alt' => ($confArr['label_alt'] ?? '') . (($confArr['label_alt2'] ?? '') ? ',' . $confArr['label_alt2'] : ''),
+        'label_alt_force' => ($confArr['label_alt_force'] ?? ''),
         'default_sortby' => 'ORDER BY datetime DESC',
-        'prependAtCopy' => $confArr['prependAtCopy'] ? $locallang_general . 'LGL.prependAtCopy' : '',
+        'prependAtCopy' => (($confArr['prependAtCopy'] ?? '') ? $locallang_general . 'LGL.prependAtCopy' : ''),
         'versioningWS' => true,
         'origUid' => 't3_origuid',
         'useColumnsForDefaultValues' => 'type',
@@ -346,7 +346,7 @@ return [
                 'foreign_table_where' => ' ORDER BY tt_news_cat.title ASC',
                 'MM' => 'tt_news_cat_mm',
                 'size' => 20,
-                'minitems' => $confArr['requireCategories'] ? 1 : 0,
+                'minitems' => (($confArr['requireCategories'] ?? '') ? 1 : 0),
                 'maxitems' => 500,
                 'renderMode' => 'tree',
                 'treeConfig' => [
